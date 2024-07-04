@@ -59,15 +59,16 @@ pub struct PayoutResponse {
     pub recipient: Recipient,
     pub customerTimestamp: String,
     pub statementDescription: String,
-    pub created: String,
-    pub receivedByRecipient: String,
-    pub correspondentIds: CorrespondentIds,
-    pub metadata: Metadata,
+    pub created: Option<String>,
+    pub receivedByRecipient: Option<String>,
+    pub correspondentIds: Option<CorrespondentIds>,
+    pub metadata: Option<Metadata>,
 }
 
 #[derive(Deserialize, Debug)]
 pub struct CorrespondentIds {
-    pub SOME_CORRESPONDENT_ID: String,
+    pub SOME_CORRESPONDENT_ID: Option<String>,
+    pub financialTransactionId: Option<String>
 }
 
 #[derive(Deserialize, Debug)]

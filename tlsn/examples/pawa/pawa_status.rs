@@ -1,7 +1,4 @@
 use dotenv::dotenv;
-use http_body_util::{BodyExt, Empty};
-use hyper::{body::Bytes, Request, Uri};
-use hyper::header::AUTHORIZATION;
 use notary_client::{Accepted, NotarizationRequest, NotaryClient};
 use tlsn_core::commitment::CommitmentKind;
 use tlsn_core::proof::TlsProof;
@@ -11,11 +8,11 @@ use std::{
 };
 use tlsn_prover::tls::{Prover, ProverConfig};
 use tokio::io::AsyncWriteExt as _;
-use hyper_util::rt::TokioIo;
 use tokio_util::compat::{FuturesAsyncReadCompatExt, TokioAsyncReadCompatExt};
 use tracing::{debug, info};
 use tlsn_examples::PayoutResponse;
-
+use reqwest::Client;
+use serde_json::Value;
 
 #[tokio::main]
 async fn main() -> std::io::Result<()> {
@@ -33,8 +30,8 @@ async fn main() -> std::io::Result<()> {
     let server_domain = "api.sandbox.pawapay.cloud";
 
     tracing_subscriber::fmt()
-    .with_env_filter("debug,yamux=info")
-    .init();
+        .with_env_filter("debug,yamux=info")
+        .init();
 
     dotenv().ok();
 
@@ -79,28 +76,20 @@ async fn main() -> std::io::Result<()> {
 
     let (tls_connection, prover_fut) = prover.connect(client_socket.compat()).await.unwrap();
 
-    let tls_connection = TokioIo::new(tls_connection.compat());
-
     let prover_ctrl = prover_fut.control();
 
     let prover_task = tokio::spawn(prover_fut);
 
-    let (mut request_sender, connection) = hyper::client::conn::http1::handshake(tls_connection)
-        .await
-        .unwrap();
-
-    tokio::spawn(connection);
+    let client = Client::new();
 
     // Construct the URL
     let url = format!("https://{}/payouts/{}", server_domain, payout_id);
-    let uri: Uri = url.parse().unwrap();
 
     // Create the request
-    let request = Request::builder()
-        .method("GET")
-        .uri(uri.clone())
-        .header(AUTHORIZATION, format!("Bearer {}", jwt))
-        .body(Empty::<Bytes>::new())
+    let request = client
+        .get(&url)
+        .bearer_auth(&jwt)
+        .build()
         .unwrap();
 
     debug!("Sending request: {:?}", request);
@@ -109,16 +98,12 @@ async fn main() -> std::io::Result<()> {
     // until after the connection is closed. This will speed up the proving process!
     prover_ctrl.defer_decryption().await.unwrap();
 
-    let response = request_sender.send_request(request).await.unwrap();
+    let response = client.execute(request).await.unwrap();
 
     debug!("Sent request");
 
-    // assert!(response.status() == StatusCode::OK, "{}", response.status());
-
-    debug!("Request OK");
-
     // Pretty printing :)
-    let payload = response.into_body().collect().await.unwrap().to_bytes();
+    let payload = response.bytes().await.unwrap();
     debug!("Payload: {:?}", payload);
     let response_body = String::from_utf8_lossy(&payload);
     println!("Response: {}", response_body);
