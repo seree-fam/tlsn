@@ -1,4 +1,3 @@
-use dotenv::dotenv;
 use elliptic_curve::pkcs8::DecodePrivateKey;
 use futures::{AsyncRead, AsyncWrite};
 use http_body_util::{BodyExt, Empty};
@@ -6,7 +5,6 @@ use hyper::{body::Bytes, Request, StatusCode};
 use hyper_util::rt::TokioIo;
 use notary_client::{Accepted, NotarizationRequest, NotaryClient};
 use serde::{Deserialize, Serialize};
-use std::{env, io::Write};
 use tlsn_core::{commitment::CommitmentKind, proof::TlsProof};
 use tlsn_prover::tls::{Prover, ProverConfig};
 use tlsn_verifier::tls::{Verifier, VerifierConfig};
@@ -106,17 +104,13 @@ pub async fn run_notary<T: AsyncWrite + AsyncRead + Send + Unpin + 'static>(conn
         .unwrap();
 }
 
-pub async fn run_pawa(payout_id: &str) -> std::io::Result<(bool)> {
+pub async fn run_pawa(payout_id: &str, jwt: &str) -> std::io::Result<(bool)> {
     println!("Payout ID: {}", payout_id);
     let server_domain = "api.sandbox.pawapay.cloud";
 
     tracing_subscriber::fmt()
         .with_env_filter("debug,yamux=info")
         .init();
-
-    dotenv().ok();
-
-    let jwt = env::var("JWT").expect("JWT must be set");
 
     const NOTARY_HOST: &str = "notary.pse.dev";
     const NOTARY_PORT: u16 = 443;
@@ -172,7 +166,7 @@ pub async fn run_pawa(payout_id: &str) -> std::io::Result<(bool)> {
     let url = format!("https://{}/payouts/{}", server_domain, payout_id);
 
     let request = Request::get(url.clone())
-        .header("Authorization", format!("Bearer {}", jwt.as_str()))
+        .header("Authorization", format!("Bearer {}", jwt))
         .header(hyper::header::CONTENT_TYPE, "application/json")
         .header(hyper::header::HOST, "api.sandbox.pawapay.cloud")
         .header("Connection", "close")
