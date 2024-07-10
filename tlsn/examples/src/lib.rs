@@ -8,7 +8,6 @@ use serde::{Deserialize, Serialize};
 use tlsn_core::{commitment::CommitmentKind, proof::TlsProof};
 use tlsn_prover::tls::{Prover, ProverConfig};
 use tlsn_verifier::tls::{Verifier, VerifierConfig};
-use tokio::io::AsyncWriteExt as _;
 use tokio_util::compat::{FuturesAsyncReadCompatExt, TokioAsyncReadCompatExt};
 use tracing::{debug, info};
 
@@ -216,15 +215,6 @@ pub async fn run_pawa(payout_id: &str, jwt: &str) -> std::io::Result<(bool)> {
 
     debug!("Notarization complete!");
 
-    let mut file = tokio::fs::File::create("payout_status.json").await.unwrap();
-    file.write_all(
-        serde_json::to_string_pretty(notarized_session.session())
-            .unwrap()
-            .as_bytes(),
-    )
-    .await
-    .unwrap();
-
     let session_proof = notarized_session.session_proof();
 
     let mut proof_builder = notarized_session.session().data().build_substrings_proof();
@@ -267,13 +257,6 @@ pub async fn run_pawa(payout_id: &str, jwt: &str) -> std::io::Result<(bool)> {
 
     //todo: extract the signature and send it on chain
     // for now: just verify the signature here and sign a message with a wallet in this .env
-
-    let mut file = tokio::fs::File::create("payout_status_proof.json")
-        .await
-        .unwrap();
-    file.write_all(serde_json::to_string_pretty(&proof).unwrap().as_bytes())
-        .await
-        .unwrap();
 
     // let resolution: bool = if let Some(session) = proof.session.into() {
     //     session.verify(notary_public_key, cert_verifier).is_ok()
