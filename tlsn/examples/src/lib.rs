@@ -107,9 +107,9 @@ pub async fn run_pawa(payout_id: &str, jwt: &str) -> std::io::Result<(bool)> {
     println!("Payout ID: {}", payout_id);
     let server_domain = "api.sandbox.pawapay.cloud";
 
-    tracing_subscriber::fmt()
-        .with_env_filter("debug,yamux=info")
-        .init();
+    // tracing_subscriber::fmt()
+    //     .with_env_filter("debug,yamux=info")
+    //     .init();
 
     const NOTARY_HOST: &str = "notary.pse.dev";
     const NOTARY_PORT: u16 = 443;
