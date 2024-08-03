@@ -196,6 +196,7 @@ async fn main() -> std::io::Result<()> {
     file.write_all(serde_json::to_string_pretty(&proof).unwrap().as_bytes())
         .await
         .unwrap();
-
+    
+    debug!("Ending function here.");
     Ok(())
 }
