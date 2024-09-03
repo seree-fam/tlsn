@@ -173,6 +173,12 @@ async fn main() -> std::io::Result<()> {
                 .unwrap();
         }
     }
+    // Expose the request Line: which of the commitment id's is the requestLine?
+    // fetch the UUID from it and assert that it pertains to the relevant order
+    // verify the request in the Substrings Proof
+    let (mut sent, mut recv) = substrings.verify(&header).unwrap();
+    // Then, we check the recv to ensure that it contains "COMPLETED" and has the uuid
+    // send all info to the smart contract
 
     let response = &notarized_session.transcript().responses[0];
 

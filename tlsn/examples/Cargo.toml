@@ -30,11 +30,14 @@ tracing.workspace = true
 chrono = "0.4"
 dotenv = "0.15.0"
 elliptic-curve = { version = "0.13.5", features = ["pkcs8"] }
+ethers = { version = "2.0.14", features = ["ws"]}
+mpz-core = { git = "https://github.com/privacy-scaling-explorations/mpz", rev = "b8ae7ac" }
 regex = "1.10.3"
 serde = { version = "1.0.147", features = ["derive"] }
 serde_json = "1.0"
 actix-web = "4.8.0"
 reqwest = "0.12.5"
+sha2 = "0.10"
 uuid = "1.9.1"
 
 [[example]]

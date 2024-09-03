@@ -230,7 +230,6 @@ pub async fn run_pawa(payout_id: &str, jwt: &str) -> std::io::Result<(bool)> {
         .unwrap();
 
     for header in &request.headers {
-        // todo: reveal the payment uuid and the status as well
         if header.name.as_str().eq_ignore_ascii_case("Host") {
             proof_builder
                 .reveal_sent(header, CommitmentKind::Blake3)

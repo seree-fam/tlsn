@@ -93,7 +93,7 @@ async fn main() {
     let prover = prover.start_notarize();
 
     // Build proof (with or without redactions)
-    let redact = false;
+    let redact = true;
     let proof = if !redact {
         build_proof_without_redactions(prover).await
     } else {
@@ -101,7 +101,7 @@ async fn main() {
     };
 
     // Write the proof to a file
-    let mut file = tokio::fs::File::create("simple_proof.json").await.unwrap();
+    let mut file = tokio::fs::File::create("simple_proof_redactions.json").await.unwrap();
     file.write_all(serde_json::to_string_pretty(&proof).unwrap().as_bytes())
         .await
         .unwrap();

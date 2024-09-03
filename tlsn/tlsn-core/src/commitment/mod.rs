@@ -149,7 +149,7 @@ impl CommitmentOpening {
 /// A collection of transcript commitments.
 #[derive(Clone, Serialize, Deserialize)]
 pub struct TranscriptCommitments {
-    /// A Merkle tree of commitments. Each commitment's index in the tree matches its `CommitmentId`.
+    /// A Merkle tree of commitments. 
     merkle_tree: MerkleTree,
     commitments: HashMap<CommitmentId, Commitment>,
     /// Information about the above `commitments`.
