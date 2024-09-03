@@ -1,13 +1,14 @@
 server:
-  name: "notary-server"
+  name: "sereé-notary-server"
   host: "0.0.0.0"
   port: 7047
   html-info: |
-    <h1>Notary Server {version}!</h1>
+    <h1>Sereé Notary Server {version}!</h1>
     <ul>
-    <li>git commit hash: <a href="https://github.com/tlsnotary/tlsn/commit/{git_commit_hash}">{git_commit_hash}</a></li>
-    <li>git commit timestamp: {git_commit_timestamp}</li>
-    <li>public key: <pre>{public_key}</pre></li>
+    <li>git commit hash: <a href="https://github.com/seree-fam/tlsn/commit/8828048de78c7387919e534d37900e6b1eafe8c4">8828048de78c7387919e534d37900e6b1eafe8c4</a></li>
+    <li>git commit timestamp: September 3, 2024 at 3pm</li>
+    <li>public key: MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEK1ii6IViS+tvNQJ38396WHXeN3ea
+TDeCAd3gKU+FOg6Jf+P81opqMT5Ri7Panhk7C52nsoOYw9FW31Wt5HWzMw==</li>
     </ul>
     <a href="/healthcheck">health check</a> - <a href="/info">info</a><br/>
 
@@ -16,12 +17,12 @@ notarization:
 
 tls:
   enabled: true
-  private-key-pem-path: "./fixture/tls/notary.key"
-  certificate-pem-path: "./fixture/tls/notary.crt"
+  private-key-pem-path: "./fixture/seree/seree-server.key"
+  certificate-pem-path: "./fixture/seree/0000_cert.pem"
 
 notary-key:
-  private-key-pem-path: "./fixture/notary/notary.key"
-  public-key-pem-path: "./fixture/notary/notary.pub"
+  private-key-pem-path: "fixture/seree/seree-notary-private-key.pem"
+  public-key-pem-path: "./fixture/seree/seree-notary-public-key.pub"
 
 logging:
   level: DEBUG

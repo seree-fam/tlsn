@@ -1,0 +1,1 @@
+web: cd notary/server && cargo run --release
