@@ -1,10 +1,11 @@
 #!/bin/bash
-# AWS CodeDeploy hook sequence: https://docs.aws.amazon.com/codedeploy/latest/userguide/reference-appspec-file-structure-hooks.html#appspec-hooks-server
 set -ex
 
+echo "APPLICATION_NAME: $APPLICATION_NAME"
 APP_NAME=$(echo $APPLICATION_NAME | awk -F- '{ print $2 }')
+echo "APP_NAME: $APP_NAME"
 
-if [ $APP_NAME = "stable" ]; then
+if [ "$APP_NAME" = "stable" ]; then
   VERSIONS_DEPLOYED=$(find ~/ -maxdepth 1 -type d -name 'stable_*')
   VERSIONS_DEPLOYED_COUNT=$(echo $VERSIONS_DEPLOYED | wc -w)
 
@@ -17,7 +18,7 @@ if [ $APP_NAME = "stable" ]; then
     for DIR in $VERSIONS_DEPLOYED; do
       TIME=$(stat -c %W $DIR)
 
-      if [ -z $OLDEST_TIME ] || [ $TIME -lt $OLDEST_TIME ]; then
+      if [ -z "$OLDEST_TIME" ] || [ "$TIME" -lt "$OLDEST_TIME" ]; then
         OLDEST_DIR=$DIR
         OLDEST_TIME=$TIME
       fi
@@ -25,12 +26,20 @@ if [ $APP_NAME = "stable" ]; then
 
     echo "The oldest version is running under: $OLDEST_DIR"
     PID=$(lsof $OLDEST_DIR/tlsn/notary/target/release/notary-server | awk '{ print $2 }' | tail -1)
-    kill -15 $PID || true
-    rm -rf  $OLDEST_DIR
+    if [ -n "$PID" ]; then
+      kill -15 $PID || true
+    else
+      echo "No process found for $OLDEST_DIR"
+    fi
+    rm -rf $OLDEST_DIR
   fi
 else
-  PID=$(pgrep -f notary.*$APP_NAME)
-  kill -15 $PID || true
+  PID=$(pgrep -f 'notary.*$APP_NAME')
+  if [ -n "$PID" ]; then
+    kill -15 $PID || true
+  else
+    echo "No process found for $APP_NAME"
+  fi
 fi
 
 exit 0
