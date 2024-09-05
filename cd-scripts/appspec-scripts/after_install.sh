@@ -22,8 +22,8 @@ else
   sudo rm -rf ~/$APP_NAME/tlsn
   sudo mv ~/tlsn/ ~/$APP_NAME
   sudo mkdir -p ~/$APP_NAME/tlsn/notary/target/release
-  sudo chown -R ubuntu.ubuntu ~/$APP_NAME
-   
+  sudo chown -R ec2-user:ec2-user ~/$APP_NAME
+
   # Download .git directory
   aws s3 cp s3://tlsn-deploy/$APP_NAME/.git ~/$APP_NAME/tlsn/.git --recursive
   
