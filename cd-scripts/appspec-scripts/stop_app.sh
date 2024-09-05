@@ -5,6 +5,10 @@ echo "APPLICATION_NAME: $APPLICATION_NAME"
 APP_NAME=$(echo $APPLICATION_NAME | awk -F- '{ print $2 }')
 echo "APP_NAME: $APP_NAME"
 
+# List all processes for debugging
+echo "Listing all processes:"
+ps -ef | grep -v grep
+
 if [ "$APP_NAME" = "stable" ]; then
   VERSIONS_DEPLOYED=$(find ~/ -maxdepth 1 -type d -name 'stable_*')
   VERSIONS_DEPLOYED_COUNT=$(echo $VERSIONS_DEPLOYED | wc -w)
