@@ -3,29 +3,29 @@ version: 0.0
 os: linux
 files:
   - source: /
-    destination: /home/ubuntu/tlsn
+    destination: /home/ec2-user/tlsn
 permissions:
-  - object: /home/ubuntu/tlsn
-    owner: ubuntu
-    group: ubuntu
+  - object: /home/ec2-user/tlsn
+    owner: ec2-user
+    group: ec2-user
 hooks:
   BeforeInstall:
     - location: cd-scripts/appspec-scripts/before_install.sh
       timeout: 300
-      runas: ubuntu
+      runas: ec2-user
   AfterInstall:
     - location: cd-scripts/appspec-scripts/after_install.sh
       timeout: 300
-      runas: ubuntu
+      runas: ec2-user
   ApplicationStart:
     - location: cd-scripts/appspec-scripts/start_app.sh
       timeout: 300
-      runas: ubuntu
+      runas: ec2-user
   ApplicationStop:
     - location: cd-scripts/appspec-scripts/stop_app.sh
       timeout: 300
-      runas: ubuntu
+      runas: ec2-user
   ValidateService:
     - location: cd-scripts/appspec-scripts/validate_app.sh
       timeout: 300
-      runas: ubuntu
+      runas: ec2-user
