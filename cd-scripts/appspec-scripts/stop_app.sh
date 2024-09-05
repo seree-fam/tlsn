@@ -30,19 +30,19 @@ if [ "$APP_NAME" = "stable" ]; then
 
     echo "The oldest version is running under: $OLDEST_DIR"
     PID=$(lsof $OLDEST_DIR/tlsn/notary/target/release/notary-server | awk '{ print $2 }' | tail -1)
-    if [ -n "$PID" ]; then
-      kill -15 $PID || true
+    if [ -z "$PID" ]; then
+      echo "No process found for $OLDEST_DIR. This might be the first deployment."
     else
-      echo "No process found for $OLDEST_DIR"
+      kill -15 $PID || true
     fi
     rm -rf $OLDEST_DIR
   fi
 else
   PID=$(pgrep -f 'notary.*$APP_NAME')
-  if [ -n "$PID" ]; then
-    kill -15 $PID || true
+  if [ -z "$PID" ]; then
+    echo "No process found for $APP_NAME. This might be the first deployment."
   else
-    echo "No process found for $APP_NAME"
+    kill -15 $PID || true
   fi
 fi
 
