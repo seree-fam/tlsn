@@ -151,15 +151,15 @@ impl NotaryClient {
         if self.tls {
             debug!("Setting up tls connection...");
 
-            let der_cert = load_certificate_from_file("./key/seree_cert.der");
+            // let der_cert = load_certificate_from_file("./key/seree_cert.der");
 
-            let mut root_store = RootCertStore::empty();
-            let (valid, invalid) = root_store.add_parsable_certificates(&[der_cert]);
+            // let mut root_store = RootCertStore::empty();
+            // let (valid, invalid) = root_store.add_parsable_certificates(&[der_cert]);
 
-            println!(
-                "Added {} valid certificates and ignored {} invalid ones",
-                valid, invalid
-            );
+            // println!(
+            //     "Added {} valid certificates and ignored {} invalid ones",
+            //     valid, invalid
+            // );
 
             let notary_client_config = ClientConfig::builder()
                 .with_safe_defaults()
@@ -390,9 +390,9 @@ fn default_root_store() -> RootCertStore {
     root_store
 }
 
-fn load_certificate_from_file(path: &str) -> Vec<u8> {
-    let mut file = File::open(path).expect("Unable to open certificate file");
-    let mut buffer = Vec::new();
-    file.read_to_end(&mut buffer).expect("Unable to read certificate file");
-    buffer
-}
+// fn load_certificate_from_file(path: &str) -> Vec<u8> {
+//     let mut file = File::open(path).expect("Unable to open certificate file");
+//     let mut buffer = Vec::new();
+//     file.read_to_end(&mut buffer).expect("Unable to read certificate file");
+//     buffer
+// }
