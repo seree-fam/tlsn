@@ -17,7 +17,7 @@ notarization:
 tls:
   enabled: true
   private-key-pem-path: "./fixture/seree/seree-server.key"
-  certificate-pem-path: "./fixture/seree/0000_cert.pem"
+  certificate-pem-path: "./fixture/seree/0001_chain.pem"
 
 notary-key:
   private-key-pem-path: "fixture/seree/seree-notary-private-key.pem"
