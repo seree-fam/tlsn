@@ -15,12 +15,12 @@ notarization:
   max-transcript-size: 20480
 
 tls:
-  enabled: true
+  enabled: false
   private-key-pem-path: "./fixture/seree/seree-server.key"
   certificate-pem-path: "./fixture/seree/0001_chain.cert"
 
 notary-key:
-  private-key-pem-path: "fixture/seree/seree-notary-private-key.pem"
+  private-key-pem-path: "./fixture/seree/seree-notary-private-key.pem"
   public-key-pem-path: "./fixture/seree/seree-notary-public-key.pub"
 
 logging:
