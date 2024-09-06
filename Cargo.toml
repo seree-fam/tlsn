@@ -1,7 +1,0 @@
-[workspace]
-members = [
-    "notary",
-    "tlsn",
-    "cd-scripts",
-    "components"
-]

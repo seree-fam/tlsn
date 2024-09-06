@@ -10,7 +10,7 @@ if [ $APP_NAME = "stable" ]; then
   ps -ef | grep notary.*$APP_NAME.*$PORT | grep -v grep
   [ $? -eq 0 ] || exit 1
 else
-  PORT=7048
+  PORT=7047
   pgrep -f notary.*$APP_NAME
   [ $? -eq 0 ] || exit 1
 fi
